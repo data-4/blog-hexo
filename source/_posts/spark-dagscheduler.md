@@ -30,9 +30,7 @@ Spark 的 stage 以 RDD 的 shuffle 为界进行划分。窄依赖的 RDD 操作
 
 为了能够从错误中进行恢复，同一个 Stage 可能会被运行多次，每一次就是一个 "attempts"。如果 `TaskScheduler` 汇报某个 task 失败的原因是因为依赖的前一个 Stage 的输出文件已经不见了，那么 `DAGScheduler` 会对前一个 Stage 重新进行提交。这通过 `CompletionEveent` 以及 `FetchFailed` 或者 `ExecutorLost` 事件来完成。`DAGScheduler` 会等待一小段时间来判断是否还有其他 task 需要重试，然后将所有失败的 task 进行重试。在这一过程中，我们需要重新对之前清理过的 Stage 进行计算。由于之前的 “attempt" 可能还在运行，所以需要特别注意
 
-![processure](../images/procesure.jpg)
-kk
-![processure](images/procesure.jpg)
+![processure](/images/procesure.jpg)
 
 上面的图是 DAGScheduler.scala 的主题脉络，当然还包括其他诸如 `taskStarted`, `taskGettingResult`, `taskEnded`, `executorZHeatbeatReceived`, `executorLost`, `executorAdded`, `taskSetFailed`, 等函数
 
